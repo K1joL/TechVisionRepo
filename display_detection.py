@@ -382,21 +382,3 @@ def find_display(image: np.ndarray, debug: bool = True):
         cv2.imwrite("debug_sift_dbscan_result.jpg", dbg)
 
     return final_corners
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--frame", default=None)
-    args = parser.parse_args()
-    if args.frame is None:
-        raise "I need frame! [--frame]"
-    img = cv2.imread(args.frame)
-    corners = find_display(img, debug=True)
-
-    if corners is None:
-        print("Экран не найден")
-    else:
-        print("Corners (TL, TR, BR, BL):")
-        for p in corners.astype(int):
-            print(tuple(p))
-

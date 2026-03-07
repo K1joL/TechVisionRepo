@@ -14,10 +14,10 @@ def blend(frame, warped, corners):
 def insert_image(frame, insert_img, corners) -> np.ndarray:
     h_image, w_image = insert_img.shape[:2]
     src_points = np.float32([
-        [0,   0  ],   # top-left
-        [w_image-1, 0  ],   # top-right
-        [w_image-1, h_image-1],   # bottom-right
-        [0,   h_image-1]    # bottom-left
+        [0,   0  ],                 # top-left
+        [w_image-1, 0  ],           # top-right
+        [w_image-1, h_image-1],     # bottom-right
+        [0,   h_image-1]            # bottom-left
     ])
 
     transform = cv2.getPerspectiveTransform(src_points, corners)

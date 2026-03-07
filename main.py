@@ -3,6 +3,7 @@ import image_warping
 import cv2
 import argparse
 import textwrap
+import numpy as np
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -77,6 +78,8 @@ def open_video_capture(source):
 def stream(cap, image_to_insert):
     cv2.namedWindow('Display', cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
     cv2.resizeWindow('Display', 1280, 720)
+    alpha = 0.3
+    smoothed_corners = None
 
     while True:
         ret, frame = cap.read()
@@ -98,7 +101,13 @@ def stream(cap, image_to_insert):
             for p in corners.astype(int):
                 print(tuple(p))
 
-        display = image_warping.insert_image(frame, image_to_insert, corners)
+        # Smooth corners using EMA
+        if smoothed_corners is None:
+            smoothed_corners = corners.astype(np.float32)
+        else:
+            smoothed_corners = alpha * corners + (1 - alpha) * smoothed_corners
+
+        display = image_warping.insert_image(frame, image_to_insert, smoothed_corners)
         cv2.imshow('Display', display)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
